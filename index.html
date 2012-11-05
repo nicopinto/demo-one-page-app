@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+  <title>A One Page App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A one single app demo, with backbone and labjs">
+  <meta name="author" content="Nico Pinto">
+
+  <!-- styles -->
+  <link href="css/bootstrap.css" rel="stylesheet">
+  <link href="css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="css/main.css" rel="stylesheet">
+  <script>window.jsenv="prod";</script>
+</head>
+<body>
+
+  <div id="loaderBox">Loading...</div>
+
+	<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">A One Page App</a>
+          <div class="nav-collapse collapse">
+            <p class="navbar-text pull-right">
+              Logged in as <a href="http://assets.vice.com/content-images/contentimage/no-slug/df88de307e2d690553e9a23ecb842123.jpg" target="_blank" class="navbar-link">George Mickey Lucas</a>
+            </p>
+            <ul class="nav">
+              <li><div class="btn-group">
+								 <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#">
+								   Credits
+								   <span class="caret"></span>
+								 </a>
+								 <ul class="dropdown-menu">
+								   <li><a href="http://backbonejs.org" target="_blank"><span class="icon-thumbs-up"></span> Backbone JS</a></li>
+								   <li><a href="http://underscorejs.org/" target="_blank">Underscore JS</a></li>
+								   <li><a href="http://labjs.com/" target="_blank">LabJS</a></li>
+								   <li><a href="https://github.com/h5bp/ant-build-script" target="_blank">H5BP Build Script</a></li>
+								   <li><a href="http://visualrecipes.com/" target="_blank"><span class="icon-gift"></span> Visual Recipes</a></li>
+								  </ul>
+							</div></li>
+              <li><a href="http://twitter.github.com/bootstrap" target="_blank">Thankyou bootstrap</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div id="appContainer" class="container-fluid" data-menus-per-page="30" data-allMenus-page="1">
+    	<div class="row-fluid">
+         <div class="hero-unit">
+         	<div id="welcomeBox" class="box">
+	          <h1>Hello, world!</h1>
+	          <p>This is your oportunity to try this great application.</p>
+	          <p><a id="createBtn" href="#create-menu" class="btn btn-primary btn-large">Start! &raquo;</a></p>
+           </div>
+           <div id="createBox" class="box row-fluid">
+           	<section class="span4">
+            	<form id="formCreate">
+							  <fieldset>
+							    <legend>Create your own Menu</legend>
+							    <label>The Title</label>
+							    <input type="text" class="input-large" placeholder="Type something">
+							    <span class="help-block" style="display:none">Example block-level help text here.</span>
+							    <hr>
+							    <button type="submit" class="btn btn-large btn-success">SAVE</button>
+							  </fieldset>
+							</form>
+						</section>
+						<section class="dishes span8"><!-- HERE WILL BE THE DISHES RANDOM --></section>
+           </div>
+           <div id="thanksBox" class="box">
+	          <h1>Thank you for your menu</h1>
+	          <p>Please, create another one or get out of here!</p>
+	          <p><a id="createAgainBtn" class="btn btn-warning btn-large">Again! &raquo;</a></p>
+           </div>
+         </div>
+         <div id="menuList" class="mid-content"></div><!-- /menuList -->
+         <div id="menuDetail" class="mid-content"></div><!-- /menuDetail -->
+        
+      </div><!--/row-->
+      
+      <hr>
+
+      <footer>
+      	<a id="loadMoreMenues" class="btn btn-primary btn-large">Load More</a>
+      	<p>&nbsp;</p>
+        <p>&copy; R/GA 2012</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+<!-- templates scripts -->
+<script id="menuCreateDishesTemplate" type="text/template">
+						<article class="appetizer span4" data-base-url="<%= recipes.appetizer.get('url') %>" data-recipe-id="<%= recipes.appetizer.get('id') %>">
+								<h3>Appetizer</h3>
+	              <img src="<%= recipes.appetizer.get('url') %>214x164.jpg" />
+	              <a class="btn btn-small refresh-btn" data-type="appetizer" href="#"><span class="icon-refresh"></span></a>
+	            </article><!--/span-->
+							<article class="main-dish span4" data-base-url="<%= recipes.mainDish.get('url') %>" data-recipe-id="<%= recipes.mainDish.get('id') %>">
+								<h3>Main Dish</h3>
+	              <img src="<%= recipes.mainDish.get('url') %>214x164.jpg" />
+	              <a class="btn btn-small refresh-btn" data-type="main dish" href="#"><span class="icon-refresh"></span></a>
+	            </article><!--/span-->
+							<article class="dessert span4" data-base-url="<%= recipes.dessert.get('url') %>" data-recipe-id="<%= recipes.dessert.get('id') %>">
+								<h3>Dessert</h3>
+	              <img src="<%= recipes.dessert.get('url') %>214x164.jpg" />
+	              <a class="btn btn-small refresh-btn" data-type="dessert" href="#"><span class="icon-refresh"></span></a>
+	            </article><!--/span-->
+</script>
+<script id="menuListTemplate" type="text/template">
+<% _.each(menuModels, function(menu){ %>
+					<div class="row-fluid" data-menu-id="<%= menu.get("id") %>">
+            <div class="span3">
+              <h2><%= menu.get("title") %></h2>
+              <p><a class="btn" href="#menu/<%= menu.get("id") %>">View more &raquo;</a></p>
+            </div><!--/span-->
+            <div class="span3" data->
+	<% if( !!menu.getAppetizer()) {%>
+              <img src="<%= menu.getAppetizer().url %>590x352.jpg" />
+<% } %>
+            </div><!--/span-->
+            <div class="span3">
+	<% if( !!menu.getMainDish()) {%>
+              <img src="<%= menu.getMainDish().url %>590x352.jpg" />
+<% } %>
+            </div><!--/span-->
+            <div class="span3">
+	<% if( !!menu.getDessert()) {%>
+              <img src="<%= menu.getDessert().url %>590x352.jpg" /> 
+<% } %>             
+            </div><!--/span-->
+          </div><!--/row-->
+<% }); %>
+</script>
+
+<script id="menuNewTemplate" type="text/template">
+					<div class="row-fluid" data-menu-id="<%= menu.get("id") %>">
+            <div class="span3">
+              <h2><%= menu.get("title") %></h2>
+              <p><a class="btn view-detail" href="#menu/<%= menu.get("id") %>">View more &raquo;</a></p>
+            </div><!--/span-->
+            <div class="span3" data->
+	<% if( !!menu.getAppetizer()) {%>
+              <img src="<%= menu.getAppetizer().url %>590x352.jpg" />
+<% } %>
+            </div><!--/span-->
+            <div class="span3">
+	<% if( !!menu.getMainDish()) {%>
+              <img src="<%= menu.getMainDish().url %>590x352.jpg" />
+<% } %>
+            </div><!--/span-->
+            <div class="span3">
+	<% if( !!menu.getDessert()) {%>
+              <img src="<%= menu.getDessert().url %>590x352.jpg" /> 
+<% } %>             
+            </div><!--/span-->
+          </div><!--/row-->
+</script>
+
+<script id="menuDetailTemplate" type="text/template">
+				<div class="row-fluid" data-menu-id="<%= menu.get("id") %>">
+              <h2 class="title"><%= menu.get("title") %></h2>
+              <a class="btn btn-small btn-warning" href="#"><span class="icon-remove"></span></a>
+         	</div>
+         	<div class="row-fluid dishes">
+            <div class="span4" data->
+              <p class="type">Appetizer</p>
+              <img src="<%= menu.getAppetizer().url %>590x352.jpg" />
+            	<h3><%= menu.getAppetizer().name %></h3>
+            </div><!--/span-->
+            <div class="span4">
+              <p class="type">Main Dish</p>
+              <img src="<%= menu.getMainDish().url %>590x352.jpg" />
+            	<h3><%= menu.getMainDish().name %></h3>
+            </div><!--/span-->
+            <div class="span4">
+              <p class="type">Dessert</p>
+              <img src="<%= menu.getDessert().url %>590x352.jpg" />
+            	<h3><%= menu.getDessert().name %></h3>
+            </div><!--/span-->
+          </div><!--/row-->
+</script>
+
+<!-- app scripts  -->
+<script src="js/libs/LAB.min.js"></script>
+<script src="js/scripts.js"></script>
+<script>
+$LAB
+	.script(scripts[jsenv].libs).wait()
+	.script(scripts[jsenv].src);
+</script>
+</body>
+</html>

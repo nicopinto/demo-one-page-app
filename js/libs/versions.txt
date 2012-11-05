@@ -1,0 +1,6 @@
+#JS libs versions information File - DO NOT CHANGE
+#Sun, 04 Nov 2012 21:16:44 -0300
+
+jquery=jquery-1.8.2.min.js
+jquery.plugins=bootstrap.js
+Backbone.dependencies=json2.min.js, underscore-1.4.2.min.js, backbone-0.9.2.min.js
